@@ -5,7 +5,7 @@ An app that is designed to help track internship applications. It is meant to pr
 Removing and adding as neccessary.
 
 ## Why?
-This provides a means for me to learn full-stack programming, as well as help to help me organize my own internship applications.
+This provides a means for me to learn full-stack programming, as well as help me organize my own internship applications.
 
 ## Tech Stack
  - React

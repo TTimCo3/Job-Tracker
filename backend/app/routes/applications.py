@@ -27,7 +27,8 @@ def get_applications(db: Session = Depends(get_db)):
             "employment_type": job.employment_type,
             "work_location": job.work_location,
             "location": job.location,
-
+            
+            "id": application.id,
             "status": application.status,
             "notes": application.notes,
             "date_applied": application.date_applied
@@ -51,7 +52,8 @@ def get_application(application_id: int, db: Session = Depends(get_db)):
             "employment_type": job.employment_type,
             "work_location": job.work_location,
             "location": job.location,
-
+            
+            "id": application.id,
             "status": application.status,
             "notes": application.notes,
             "date_applied": application.date_applied
@@ -74,7 +76,6 @@ def create_application(application: ApplicationCreate, db: Session = Depends(get
 
     job = db.execute(select(Job).where(func.lower(Job.title) == job_title.lower(),
                                        Job.company_id == company.id)).scalar_one_or_none()
-
     if job is None:
         job = Job(company_id = company.id,
                   title = job_title,
@@ -95,20 +96,107 @@ def create_application(application: ApplicationCreate, db: Session = Depends(get
     db.add(new_app)
     db.commit()
     db.refresh(new_app)
+
+    execution = db.execute(
+        select(Application, Job, Company)
+        .join(Job, Application.job_id == Job.id)
+        .join(Company, Job.company_id == Company.id)
+        .where(Application.id == new_app.id)
+    )
+
+    application, job, company = execution.one()
+
+    return {
+        "company_name": company.name,
+        "career_url": company.career_url,
+        
+        "job_title": job.title,
+        "job_url": job.job_url,
+        "role_type": job.role_type,
+        "employment_type": job.employment_type,
+        "work_location": job.work_location,
+        "location": job.location,
+        
+        "id": application.id,
+        "status": application.status,
+        "notes": application.notes,
+        "date_applied": application.date_applied 
+    }
+
     return new_app
 
-# not found any want a 404 for this as well
 @router.put("/{application_id}")
 def update_application(application_id: int, application: ApplicationUpdate, db: Session = Depends(get_db)):
     app = db.execute(select(Application).where(Application.id == application_id)).scalar_one_or_none()
-    if app:
-        app.job_id = application.job_id
+    if app is not None:
+        company_name = application.company_name.strip()
+        job_title = application.job_title.strip()
+
+        company = db.execute(select(Company).where(func.lower(Company.name) == company_name.lower())).scalar_one_or_none()
+       
+        if company is not None:
+            company.career_url = application.career_url
+
+        if company is None:
+            company = Company(name=company_name,
+                              career_url=application.career_url)
+            db.add(company)
+            db.flush()
+
+        job = db.execute(select(Job).where(func.lower(Job.title) == job_title.lower(),
+                                           Job.company_id == company.id)).scalar_one_or_none()
+
+        if job is not None:
+            job.job_url = application.job_url
+            job.role_type = application.role_type
+            job.employment_type = application.employment_type
+            job.work_location = application.work_location
+            job.location = application.location
+
+        if job is None:
+            job = Job(company_id = company.id,
+                      title = job_title,
+                      job_url = application.job_url,
+                      role_type = application.role_type,
+                      employment_type = application.employment_type,
+                      work_location = application.work_location,
+                      location = application.location)
+            db.add(job)
+            db.flush()
+
+        app.job_id = job.id
         app.status = application.status
         app.notes = application.notes
         app.date_applied = application.date_applied
+
         db.commit()
         db.refresh(app)
-        return app
+
+        execution = db.execute(
+            select(Application, Job, Company)
+            .join(Job, Application.job_id == Job.id)
+            .join(Company, Job.company_id == Company.id)
+            .where(Application.id == app.id)
+        )
+
+        application, job, company = execution.one()
+
+        return {
+            "company_name": company.name,
+            "career_url": company.career_url,
+            
+            "job_title": job.title,
+            "job_url": job.job_url,
+            "role_type": job.role_type,
+            "employment_type": job.employment_type,
+            "work_location": job.work_location,
+            "location": job.location,
+            
+            "id": application.id,
+            "status": application.status,
+            "notes": application.notes,
+            "date_applied": application.date_applied 
+        }
     else:
         raise HTTPException(status_code=404, detail="Application not found")
 

@@ -11,19 +11,24 @@ This provides a means for me to learn full-stack programming, as well as help me
  - React
  - FastAPI
  - PostgreSQL
+ - SQLAlchemy
 
-## Planned Features
+## Current Features
  - Create applications
  - Edit applications
- - Track status
- - Search/filter
- - Dashboard
+ - Delete applications
+ - Track application status
+ - Store company and job information
+ - Store application notes and dates
+ - Persistent PostgreSQL database
 
-## Future Features
+## Potential Features to Come
+ - Search and filtering
+ - Dashboard and application analytics
  - Different layouts/views
- - Browser extension
- - API integration
+ - Docker/containerization
  - Deployment
- - Docker
+ - CI/CD
  - Authentication
-
+ - Browser extension
+ - External job/API integration

@@ -93,26 +93,52 @@ function App() {
 		setEditingApplicationId(application.id)
 
 		setNewApplication({
-			job_id: application.job_id,
+			company_name: application.company_name,
+			career_url: application.career_url ?? '',
+			job_title: application.job_title,
+			job_url: application.job_url ?? '',
+			role_type: application.role_type ?? '',
+			employment_type: application.employment_type ?? '',
+			work_location: application.work_location ?? '',
+			location: application.location ?? '',
 			status: application.status,
-			notes: application.notes,
-			date_applied: application.date_applied
+			notes: application.notes ?? '',
+			date_applied: application.date_applied ?? ''
 		})
+
+		setShowModal(true)
 	}
 
 	return (
 		<div>
 			<h1>Internship Tracker</h1>
 			
-			<button onClick={() => setShowModal(true)}>
+			<button 
+			className="add-application-button"
+			onClick={() => {
+				setEditingApplicationId(null)
+				setNewApplication({
+					company_name: '',
+					career_url: '',
+					job_title: '',
+					job_url: '',
+					employment_type: '',
+					work_location: '',
+					location: '',
+					status: '',
+					notes: '',
+					date_applied: ''
+				})
+				setShowModal(true)
+			}}>
 				Add Application
 			</button>
 
 			{showModal && (
-				<div>
-					<div>
-						<form onSubmit={createApplication}>
-							<h2>Add Application</h2>
+				<div className="modal-overlay">
+					<div className="modal">
+						<form className="application-form" onSubmit={createApplication}>
+							<h2>{editingApplicationId ? 'Edit Application' : 'Add Application'}</h2>
 
 							<input
 								type="text"
@@ -246,10 +272,13 @@ function App() {
 							/>
 
 							<button type="submit">
-								Add Application
+								{editingApplicationId ? 'Save Changes' : 'Add Application'}
 							</button>
 
-							<button  type="button" onClick={() => setShowModal(false)}>
+							<button  type="button" onClick={() => {
+								setShowModal(false)
+								setEditingApplicationId(null)
+							}}>
 								Cancel
 							</button>
 						</form>
@@ -260,19 +289,27 @@ function App() {
 			<h2>Applications</h2>
 
 			{applications.map(application => (
-				<div key={application.id}>
-					<p>Application ID: {application.id}</p>
-					<p>Job ID: {application.job_id}</p>
+				<div className="application-card" key={application.id}>
+					<h3>{application.company_name} - {application.job_title}</h3>
 					<p>Status: {application.status}</p>
 					<p>Date Applied: {application.date_applied}</p>
 					<p>Notes: {application.notes}</p>
 
-					<button onClick={() => deleteApplication(application.id)}>
-						Delete
-					</button>
+					<p>Location: {application.location}</p>
+					<p>Work Location: {application.work_location}</p>
+
+					<p>Role Type: {application.role_type}</p>
+					<p>Employment Type: {application.employment_type}</p>
+
+					<p>Career URL: {application.career_url}</p>
+					<p>Job URL: {application.job_url}</p>
 
 					<button onClick={() => editApplication(application)}>
 						Edit
+					</button>
+
+					<button onClick={() => deleteApplication(application.id)}>
+						Delete
 					</button>
 				</div>
 			))}

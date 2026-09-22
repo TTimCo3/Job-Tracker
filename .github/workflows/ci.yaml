@@ -23,4 +23,6 @@ jobs:
 
       - name: Check backend imports
         working-directory: backend/app
+        env:
+          DATABASE_URL: postgresql+psycopg://test:test@localhost:5432/test
         run: python3 -c "from main import app"

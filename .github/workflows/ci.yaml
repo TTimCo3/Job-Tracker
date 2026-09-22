@@ -23,4 +23,4 @@ jobs:
 
       - name: Check backend imports
         working-directory: backend/app
-        run: python3 -c "from backend.app.main import app"
+        run: python3 -c "from main import app"

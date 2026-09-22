@@ -87,10 +87,10 @@ jobs:
         run: docker compose up -d --build
       
       - name: POST test
-        run: curl -X POST -H '{Content-Type: application/json}' -d '{"company_name":"test_company","job_title":"test_job","status":"Applied"}' http://localhost:8000/applications/
+        run: curl -X POST -H "Content-Type: application/json" -d '{"company_name":"test_company","job_title":"test_job","status":"Applied"}' http://localhost:8000/applications/
       
       - name: PUT test
-        run: curl -X PUT -H '{Content-Type: application/json}' -d '{"company_name":"test_company","job_title":"test_job","status":"Rejected","notes":"test_notes"}' http://localhost:8000/applications/1
+        run: curl -X PUT -H "Content-Type: application/json" -d '{"company_name":"test_company","job_title":"test_job","status":"Rejected","notes":"test_notes"}' http://localhost:8000/applications/1
 
       - name: DELETE test
         run: curl -X DELETE http://localhost:8000/applications/1

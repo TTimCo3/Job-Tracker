@@ -81,27 +81,27 @@ jobs:
             'POSTGRES_DB=test_db' > .env
 
           printf '%s\n' \
-            'DATABASE_URL=postgresql+psycopg://test:test@db:5432/test' > backend/.env
+            'DATABASE_URL=postgresql+psycopg://test_user:test_pass@db:5432/test' > backend/.env
 
       - name: Start application
         run: docker compose up -d --build
       
       - name: POST test
         run: |
-          curl -X POST -H "Content-Type: application/json" \
+          curl --fail-with-body -X POST -H "Content-Type: application/json" \
             -d '{"company_name":"test_company","job_title":"test_job","status":"Applied"}' \
             http://localhost:8000/applications/
       
       - name: PUT test
         run: |
-          curl -X PUT -H "Content-Type: application/json" \
+          curl --fail-with-body -X PUT -H "Content-Type: application/json" \
             -d '{"company_name":"test_company","job_title":"test_job","status":"Rejected","notes":"test_notes"}' \
             http://localhost:8000/applications/1
 
-      - name: DELETE test
-        run: |
-          curl -X DELETE http://localhost:8000/applications/1
-
       - name: GET test
         run: |
-          curl -X GET http://localhost:8000/applications/
+          curl --fail-with-body -X GET http://localhost:8000/applications/
+
+      - name: DELETE test
+        run: |
+          curl --fail-with-body -X DELETE http://localhost:8000/applications/1

@@ -62,3 +62,26 @@ jobs:
 
       - name: Build frontend
         run: docker build -t tracker-frontend frontend/
+
+  compose:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker
+        uses: docker/setup-docker-action@v5
+
+      - name: Create test environment
+        run: |
+          printf '%s\n' \
+            'POSTGRES_USER=test_user' \
+            'POSTGRES_PASSWORD=test_pass' \
+            'POSTGRES_DB=test_db' > .env
+
+          printf '%s\n' \
+            'DATABASE_URL=postgresql+psycopg://test:test@db:5432/test' > backend/.env
+
+      - name: Start application
+        run: docker compose up -d --build

@@ -46,3 +46,19 @@ jobs:
       - name: Build frontend
         working-directory: frontend
         run: npm run build
+
+  docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker
+        uses: docker/setup-docker-action@v5
+
+      - name: Build backend
+        run: docker build -t tracker-backend backend/
+
+      - name: Build frontend
+        run: docker build -t tracker-frontend frontend/

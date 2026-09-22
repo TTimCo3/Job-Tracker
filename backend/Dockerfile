@@ -12,4 +12,4 @@ USER app
 
 WORKDIR ./app/
 
-CMD ["sh", "-c", "./creaTable.py && uvicorn main:app --host 0.0.0.0"]
+CMD ["sh", "-c", "python3 creaTable.py && uvicorn main:app --host 0.0.0.0"]

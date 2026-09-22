@@ -26,7 +26,7 @@ services:
     build: ./frontend
     image: tracker-frontend
     ports: 
-      - "3000:80"
+      - "5173:80"
 
 volumes:
   postgres_data:

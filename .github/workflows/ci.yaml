@@ -81,7 +81,7 @@ jobs:
             'POSTGRES_DB=test_db' > .env
 
           printf '%s\n' \
-            'DATABASE_URL=postgresql+psycopg://test_user:test_pass@db:5432/test' > backend/.env
+            'DATABASE_URL=postgresql+psycopg://test_user:test_pass@db:5432/test_db' > backend/.env
 
       - name: Start application
         run: docker compose up -d --build
@@ -105,3 +105,7 @@ jobs:
       - name: DELETE test
         run: |
           curl --fail-with-body -X DELETE http://localhost:8000/applications/1
+      
+      - name: Show logs on failure
+        if: failure()
+        run: docker compose logs

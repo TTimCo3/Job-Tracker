@@ -85,3 +85,6 @@ jobs:
 
       - name: Start application
         run: docker compose up -d --build
+
+      - name: Make sure it works
+        run: curl -X GET http://localhost:5173/applications/

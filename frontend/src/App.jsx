@@ -22,7 +22,7 @@ function App() {
 	const [editingApplicationId, setEditingApplicationId] = useState(null)
 
 	useEffect(() => {
-		fetch('http://localhost:8000/applications/')
+		fetch('/api/applications/')
 			.then(response => response.json())
 			.then(data => setApplications(data))
 	}, [])
@@ -31,8 +31,8 @@ function App() {
 		event.preventDefault()
 
 		const url = editingApplicationId
-			? `http://localhost:8000/applications/${editingApplicationId}`
-			: 'http://localhost:8000/applications/'
+			? `/api/applications/${editingApplicationId}`
+			: '/api/applications/'
 
 		const method = editingApplicationId ? 'PUT' : 'POST'
 
@@ -79,7 +79,7 @@ function App() {
 	}
 
 	function deleteApplication(applicationId) {
-		fetch(`http://localhost:8000/applications/${applicationId}`, {
+		fetch(`/api/applications/${applicationId}`, {
 			method: 'DELETE'
 		})
 			.then(() => {

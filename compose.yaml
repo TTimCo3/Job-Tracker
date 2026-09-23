@@ -27,6 +27,9 @@ services:
     image: tracker-frontend
     ports: 
       - "5173:80"
+    depends_on:
+      backend:
+        condition: service_started
 
 volumes:
   postgres_data:

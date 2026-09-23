@@ -85,7 +85,22 @@ jobs:
 
       - name: Start application
         run: docker compose up -d --build
-      
+
+      - name: Wait for backend
+        run: |
+          for i in {1..30}; do
+            if curl -fsS http://localhost:8000/applications/ >/dev/null; then
+              echo "Backend is ready"
+              exit 0
+            fi
+            echo "Waiting for backend..."
+            sleep 1
+          done
+
+          echo "Backend did not become ready"
+          docker compose logs
+          exit 1
+            
       - name: POST test
         run: |
           curl --fail-with-body -X POST -H "Content-Type: application/json" \
@@ -100,7 +115,7 @@ jobs:
 
       - name: GET test
         run: |
-          curl --fail-with-body -X GET http://localhost:8000/applications/
+            curl --fail-with-body -X GET http://localhost:8000/applications/
 
       - name: DELETE test
         run: |

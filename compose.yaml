@@ -12,8 +12,7 @@ services:
       retries: 5
   
   backend:
-    build: ./backend
-    image: tracker-backend
+    image: ghcr.io/ttimco3/internship-tracker-backend:latest
     env_file: 
       - backend/.env
     ports: 
@@ -23,13 +22,18 @@ services:
         condition: service_healthy
 
   frontend:
-    build: ./frontend
-    image: tracker-frontend
+    image: ghcr.io/ttimco3/internship-tracker-frontend:latest
     ports: 
       - "5173:80"
     depends_on:
       backend:
         condition: service_started
+
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 60
 
 volumes:
   postgres_data:

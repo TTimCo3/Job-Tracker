@@ -286,7 +286,7 @@ function App() {
 				</div>
 			)}
 			
-			<h2>Applications</h2>
+			<h2>Test</h2>
 
 			{applications.map(application => (
 				<div className="application-card" key={application.id}>

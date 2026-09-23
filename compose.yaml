@@ -20,6 +20,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
 
   frontend:
     image: ghcr.io/ttimco3/internship-tracker-frontend:latest
@@ -28,12 +30,14 @@ services:
     depends_on:
       backend:
         condition: service_started
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
 
   watchtower:
-    image: containrrr/watchtower
+    image: nickfedor/watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    command: --interval 60
+    command: --interval 60 --label-enable
 
 volumes:
   postgres_data:
